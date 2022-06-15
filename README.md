@@ -37,7 +37,8 @@ python 2.7(jupyter notebook,sublime text4)
 Falls es Probleme mit dem osmnx-package gibt, muss ein neues environment aufgesetzt werden.
 ***
 In der Klasse Test, sowie Test_Beijing können die Algorithmen auf die road_networks und deren zugehörige GPS-Logs angewendet werden. Bisher wurde nur IVMM getestet.
-Unter road_file wird jeweils streets.txt der entsprechenden Stadt hinterlegt. Unter trip_file das GPS-Log bzw. der Ordner mit den GPS-Logs, die gematched werden sollen.
+Unter road_file wird jeweils streets.txt der entsprechenden Stadt hinterlegt. Diese txt_Datei erhält man, indem man eine osm-Karte mit dem osm-parser umwandelt. 
+Unter trip_file das GPS-Log bzw. der Ordner mit den GPS-Logs, die gematched werden sollen.
 Aktuell wird immer nur ein Log gematched. Später sollen dann mehrere Logs hintereinander gematched werden.
 ***
 Aktuell läuft das map-matching nur für Melbourne und das uts_format. Außerdem terminiert der Algorithmus nur für verkürzte GPS-Logs (z.B. gps_track_test.txt). 
