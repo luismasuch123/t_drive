@@ -46,10 +46,12 @@ Die Umwandlung in das standard_format verschafft keine Abhilfe. Mithilfe von Con
 Das uts_format ist das ursprüngliche Format der GPS-Logs für Melbourne, während das standard_format das Format ist, in dem die Daten für Seattle und Porto gegeben waren. 
 Mithilfe von ConvertMelbourneGPSLogFormat.py können die GPS-Logs aus Melbourne in das standard_format übertragen werden.
 ***
-gps_track.to_crs() liefert Error für Beijing und Seattle nicht. Dies könnte der Grund für den NodeNotReachable-Error sein.
-Wenn beispielsweise für Beijing versucht wird, die Logs im uts_format zu laden und gps_track.to_crs() in load_gps_data_beijing() nicht auskommentiert ist, erhält man den ValueError "The second input geometry is empty".
+gps_track.to_crs(to_crs) liefert Error für Beijing und Seattle. Dies könnte der Grund für den NodeNotReachable-Error sein.
+Wenn beispielsweise für Beijing versucht wird, die Logs im uts_format zu laden und gps_track.to_crs(to_crs) in load_gps_data_beijing() nicht auskommentiert ist, erhält man den ValueError "The second input geometry is empty".
 Debugging nicht möglich. ("AttributeError: module 'posixpath' has no attribute 'sep'")
 NodeNotReachable reproduzierbar mit Beijing, standard_format und load_gps_data_beijing() in Test_Beijing_IVMM.py.
+Auch für Melbourne erhält man NodeNotReachable, wenn in load_gps_data_melbourne gps_track.to_crs(crs) statt gps_track.to_crs(to_crs) aufgerufen wird.
+In https://geopandas.org/en/stable/docs/user_guide/projections.html werden die Projections erklärt.
 ***
 Die Anzahl der Kandidaten, die für jeden GPS-Punkt in Erwägung gezogen werden, kann in map_matching_test() gesetzt werden.
 ***

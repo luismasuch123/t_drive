@@ -83,11 +83,12 @@ def map_matching_test(data_name, algo_name):
 
         if data_name is 'Beijing':
             road_file = '/Users/luismasuchibanez/PycharmProjects/t_drive/map_matching/MapMatchingPython/MapMatchingPython/data/Beijing/complete-osm-map/streets.txt'
-            trip_file = '/Users/luismasuchibanez/PycharmProjects/t_drive/map_matching/MapMatchingPython/MapMatchingPython/data/Beijing/Beijing_Converted_GPS_Logs/standard_format/' + str(log_number) + '.txt'
+            trip_file = '/Users/luismasuchibanez/PycharmProjects/t_drive/map_matching/MapMatchingPython/MapMatchingPython/data/Beijing/Beijing_Converted_GPS_Logs/uts_format/' + str(log_number) + '.txt'
             road_graph_utm, gpd_edges_utm = load_road_network_beijing(road_file, crs, to_crs)
-            trip = load_gps_data_beijing(trip_file, crs, to_crs)
-            #trip = load_gps_data_melbourne(trip_file, crs, to_crs)
+            #trip = load_gps_data_beijing(trip_file, crs, to_crs)
+            trip = load_gps_data_melbourne(trip_file, crs, to_crs)
             print(trip)
+            #TODO: Warum ist trip["geometry"] == POINT(inf, inf), selbst wenn load_gps_data_melbourne() genutzt wird -> to_crs() funktiojniert nicht
 
         else:
             print('Unknown data name!\n')

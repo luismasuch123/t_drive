@@ -96,11 +96,11 @@ def map_matching_test(data_name, algo_name):
        
     elif data_name is 'Melbourne':
         road_file = '/Users/luismasuchibanez/PycharmProjects/t_drive/map_matching/MapMatchingPython/MapMatchingPython/data/Melbourne/complete-osm-map/streets.txt'
-        trip_file = '/Users/luismasuchibanez/PycharmProjects/t_drive/map_matching/MapMatchingPython/MapMatchingPython/data/Melbourne/GPS_Logs/UTS_format/gps_track.txt'
+        trip_file = '/Users/luismasuchibanez/PycharmProjects/t_drive/map_matching/MapMatchingPython/MapMatchingPython/data/Melbourne/GPS_Logs/UTS_format/gps_track_test.txt'
         #trip_file = '/Users/luismasuchibanez/PycharmProjects/t_drive/map_matching/MapMatchingPython/MapMatchingPython/data/Melbourne/GPS_Logs/standard_format/gps_track.txt'
         road_graph_utm, gpd_edges_utm = load_road_network_melbourne(road_file, crs, to_crs)
         trip = load_gps_data_melbourne(trip_file, crs, to_crs)
-        print(trip.dtypes)
+        #print(trip["geometry"])
   
 
     elif data_name is 'Porto':

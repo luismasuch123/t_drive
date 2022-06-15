@@ -64,7 +64,8 @@ def load_gps_data_melbourne(filename, crs, to_crs):
     gps_track['geometry'] = gps_track.apply(lambda row: Point(row['lon'], row['lat']), axis=1)
     gps_track['gps'] = gps_track['geometry']
     gps_track = gpd.GeoDataFrame(gps_track, crs=crs)
-    gps_track.to_crs(to_crs, inplace=True)
+    gps_track.to_crs(to_crs, inplace=True) #crs statt to_crs liefert NodeNotreachable
+    # TODO: selbe Methode für uts_formatb für Beijing aufsetzen und crs/to_crs anpassen
     return gps_track
 
 def load_gps_data_beijing(filename, crs, to_crs):
