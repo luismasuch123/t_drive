@@ -114,7 +114,7 @@ def calculate_feature_vector_matched(trip, candidates, heuristics, path, x_min, 
     if type(path) != list:
         raise TypeError("the path parameter should be a list!")
     if len(candidates) != len(path):
-        print len(path)
+        print(len(path))
         raise ValueError('trip and matched path has different length!')
     for i in range(len(path)):
         p = candidates[i].iloc[path[i]]['proj_point']
@@ -219,7 +219,7 @@ def update_pheromone_globally(pheromone, path, fitness, alpha):
         pheromone[i][path[i]][path[i + 1]] = tao_new
         # debug
         if tao_new < tao:
-            print 'global update: %f, %f' % (tao, tao_new)
+            print('global update: %f, %f' % (tao, tao_new))
 
 
 def ant_optimize(trip, candidates, trip_feature_vector, heuristics,
@@ -264,7 +264,7 @@ def ant_optimize(trip, candidates, trip_feature_vector, heuristics,
         # find the best so far path from all the ants' path
         path_bsf_ind = numpy.argmax(fitness_value_list)
         if debug:
-            print fitness_value_list[path_bsf_ind], path_list[path_bsf_ind]
+            print(fitness_value_list[path_bsf_ind], path_list[path_bsf_ind])
         # globally update the pheromone of links on the best so far path
         update_pheromone_globally(pheromone_values, path_list[path_bsf_ind], fitness_value_list[path_bsf_ind], alpha)
         g = g + 1

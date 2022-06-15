@@ -192,7 +192,7 @@ def remove_edges_with_single_point(road):
     road.drop(index_list, inplace=True)
     # road.reset_index()
     print('Removed edges with single point: ')
-    print index_list
+    print(index_list)
     # column_names = ['Edge_ID', 'from', 'to', 'two_way', 'max speed', 'vertex_count', 'geometry']
     # return pd.DataFrame(road.values, columns=column_names )
 
@@ -264,7 +264,7 @@ def combine_same_nodes(road, nodes_with_different_ids):
                 if len(edge_id_list) > len(nodes_with_different_ids[i][0][0]):
                     final_node_id = node_id
                     node_id_ind = j
-        print i, final_node_id, ind_list
+        print(i, final_node_id, ind_list)
         # update node ids
         for k in ind_list:
             if k != node_id_ind:
@@ -331,7 +331,7 @@ def load_road_network_seattle(filename, crs, to_crs):
     edges['bearing'] = \
         edges.apply(lambda edge:
                     calculate_bearing(Point(edge['geometry'].coords[0]), Point(edge['geometry'].coords[1])), axis=1)
-    # nodes_with_different_ids, id_dict = get_nodes_with_different_ids(edges)
+    #nodes_with_different_ids, id_dict = get_nodes_with_different_ids(edges)
     road_graph = nx.from_pandas_edgelist(edges,
                                          'from',
                                          'to',
@@ -361,6 +361,32 @@ def max_speed(road_type):
 
 def load_road_network_melbourne(filename, crs, to_crs):
     print('loading Melbourne Road Network ...')
+    road = pd.read_csv(filename,
+                       header=None,
+                       names=['Edge_ID', 'from', 'from lon', 'from lat',
+                              'to', 'to lon', 'to lat',
+                              'length', 'road type', 'bearing'],
+                       skiprows=[0],
+                       sep=' ')
+    road['geometry'] = road.apply(lambda row:
+                                  LineString([(row['from lon'], row['from lat']), (row['to lon'], row['to lat'])]),
+                                  axis=1)
+    road['max speed'] = road.apply(lambda row: max_speed(row['road type']), axis=1)
+    road['gps'] = road['geometry']
+    road = gpd.GeoDataFrame(road, crs=crs, geometry='geometry')
+    road.to_crs(to_crs, inplace=True)
+    road['bbox'] = road.apply(lambda row: row['geometry'].bounds, axis=1)
+    road_network_edges = pd.DataFrame(road, columns=(
+        'Edge_ID', 'from', 'to', 'gps', 'geometry', 'max speed', 'length', 'bbox'))
+    road_graph = nx.from_pandas_edgelist(road_network_edges,
+                                         'from',
+                                         'to',
+                                         ['Edge_ID', 'max speed', 'geometry', 'length'],
+                                         create_using=nx.MultiDiGraph())
+    return road_graph, gpd.GeoDataFrame(road, crs=to_crs, geometry='geometry')
+
+def load_road_network_beijing(filename, crs, to_crs):
+    print('loading Beijing Road Network ...')
     road = pd.read_csv(filename,
                        header=None,
                        names=['Edge_ID', 'from', 'from lon', 'from lat',

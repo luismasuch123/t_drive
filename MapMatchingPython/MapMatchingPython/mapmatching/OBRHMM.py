@@ -112,7 +112,7 @@ def calculate_heading_difference(edges_gpd, edge_id, mbr, mbr_heading):
         if a.is_empty:
             pass
         else:
-            print type(a)
+            print(type(a))
     diff = heading_difference(mbr_heading, edge_bearing)
     return diff
 
@@ -195,7 +195,7 @@ def calculate_shortest_path(road_graph, edges_gpd, start_edge_id, end_edge_id):
             # net_distance = nx.shortest_path_length(road_graph, source, target, weight='length')
             sp = nx.shortest_path(road_graph, source, target, weight='length')
         except Exception as err:
-            print err
+            print(err)
             # net_distance = 3*eu_distance
         else:
             route.append(start_edge_id)
@@ -270,7 +270,7 @@ def query_candidate_routes(road_graph, edges_gpd, gps_track, clusters, d_error, 
             work_clusters.append(clusters[i])
         else:
             print('cluster %d does not have candidate routes!' % i)
-            print start_edges, end_edges
+            print(start_edges, end_edges)
     return candidate_routes, candidate_edges, mbr_headings, mbrs, work_clusters
 
 
@@ -640,7 +640,7 @@ def find_optimal_route_broken(road_graph, edges_gpd, gps_track, clusters, candid
             final_cluster_id = final_cluster_id + work_cluster_ids[-1] + 1
         else:
             final_cluster_id = final_cluster_id + 1
-        print final_cluster_id
+        print(final_cluster_id)
 
     if len(opt_route_list) == 1:
         return opt_route_list[0]

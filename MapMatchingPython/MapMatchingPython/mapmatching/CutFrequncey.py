@@ -28,6 +28,6 @@ def cut_samplerate(gps_track,sample_rate):
 if __name__ == '__main__':
     gps_track=[0,1,2,3,4,5,6,7,8,9,10,11]
     gps_track=pd.DataFrame(gps_track)
-    print gps_track
+    print(gps_track)
 
-    print cut_samplerate(gps_track, 3)
+    print(cut_samplerate(gps_track, 3))

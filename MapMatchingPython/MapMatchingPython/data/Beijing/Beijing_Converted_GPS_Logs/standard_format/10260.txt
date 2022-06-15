@@ -1,0 +1,2 @@
+Data(UTC) Time(UTC) Latitude Longitude
+08-Feb-2008 03:27:01 116.43503 39.96645

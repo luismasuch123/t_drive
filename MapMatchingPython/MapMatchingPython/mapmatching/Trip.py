@@ -40,7 +40,6 @@ def load_gps_data_seattle(filename, crs, to_crs):
                             skiprows=[0],
                             delim_whitespace=True)
     # string to datetime
-   
     # gps_track=cut_samplerate(gps_track,sample_rate)
     gps_track['datetime'] = gps_track.apply(
         lambda row: datetime.strptime(row['Data(UTC)'] + ' ' + row['Time(UTC)'], '%d-%b-%Y %H:%M:%S'), axis=1)
@@ -49,7 +48,7 @@ def load_gps_data_seattle(filename, crs, to_crs):
     gps_track['timestamp'] = gps_track.apply(lambda row: time.mktime(row['datetime'].timetuple()), axis=1)
     gps_track['geometry'] = gps_track.apply(lambda row: Point(row['lon'], row['lat']), axis=1)
     gps_track = gpd.GeoDataFrame(gps_track, crs=crs)
-    gps_track.to_crs(to_crs, inplace=True)
+    #gps_track.to_crs(to_crs, inplace=True)
 
 
     return gps_track
@@ -66,5 +65,26 @@ def load_gps_data_melbourne(filename, crs, to_crs):
     gps_track['gps'] = gps_track['geometry']
     gps_track = gpd.GeoDataFrame(gps_track, crs=crs)
     gps_track.to_crs(to_crs, inplace=True)
+    return gps_track
+
+def load_gps_data_beijing(filename, crs, to_crs):
+    print('loading Beijing GPS Trajectory')
+    gps_track = pd.read_csv(filename,
+                            header=None,
+                            names=['Data(UTC)', 'Time(UTC)', 'lat', 'lon'],
+                            skiprows=[0],
+                            delim_whitespace=True)
+    # string to datetime
+
+    # gps_track=cut_samplerate(gps_track,sample_rate)
+    gps_track['datetime'] = gps_track.apply(
+        lambda row: datetime.strptime(row['Data(UTC)'] + ' ' + row['Time(UTC)'], '%d-%b-%Y %H:%M:%S'), axis=1)
+    gps_track.drop(['Data(UTC)', 'Time(UTC)'], axis=1, inplace=True)
+    # datetime to unix time
+    gps_track['timestamp'] = gps_track.apply(lambda row: time.mktime(row['datetime'].timetuple()), axis=1)
+    gps_track['geometry'] = gps_track.apply(lambda row: Point(row['lon'], row['lat']), axis=1)
+    gps_track = gpd.GeoDataFrame(gps_track, crs=crs)
+    gps_track.to_crs(to_crs, inplace=True)
+
     return gps_track
 

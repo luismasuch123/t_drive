@@ -66,7 +66,7 @@ def network_distance(road_graph_utm, gpd_edges_utm, candidate1, candidate2):
             d1 = nx.shortest_path_length(road_graph_utm, source, target, weight='length')
             sp = nx.shortest_path(road_graph_utm, source, target, weight='length')
         except Exception as err:
-            print err
+            print(err)
             d = 100000000
         else:
             # part 2 of the distance from the projected point of candidate1 to the end point of the corresponding edge

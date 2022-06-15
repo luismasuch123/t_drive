@@ -18,13 +18,13 @@ def get_optimal_path_edges(candidates, heuristics, optimal_path, debug=False):
         #    if edge_list[-1]['geometry'] != sub_edge_list[0]['geometry']:
         #        print 'path broken!'
         if debug:
-            print i
+            print(i)
         for j in range(len(sub_edge_list)-1):
             edge_list.append(sub_edge_list[j])
-            if debug: print sub_edge_list[j]['from'], sub_edge_list[j]['to']
+            if debug: print(sub_edge_list[j]['from'], sub_edge_list[j]['to'])
         if i==len(candidates)-1:
             edge_list.append(sub_edge_list[-1])
-            if debug: print sub_edge_list[-1]['from'], sub_edge_list[-1]['to']
+            if debug: print(sub_edge_list[-1]['from'], sub_edge_list[-1]['to'])
     return edge_list
 
 
@@ -35,7 +35,7 @@ def trip_bbox_utm(trip):
     output: (minx, miny, maxx, maxy)
     '''
     from shapely.geometry import LineString
-    line = LineString(list(trip['geometry_utm']))
+    line = LineString(list(trip['geometry']))
     return line.buffer(500).bounds
 
 
@@ -64,7 +64,7 @@ def visualize_matching_results(trip, candidates, edge_idx, heuristics, optimal_p
     # prepare data
     edges_collection = gpd.GeoDataFrame(list(edge_idx.intersection(trip_bbox_utm(trip), objects='raw')))
     candidates_points = get_candidates_as_geodataframe(candidates)
-    trip_utm = gpd.GeoDataFrame(data={'geometry': trip['geometry_utm']})
+    trip_utm = gpd.GeoDataFrame(data={'geometry': trip['geometry']})
     opt_proj_points = get_optimal_mapping_points(candidates, optimal_path)
     edge_path = get_optimal_path_edges(candidates, heuristics, optimal_path)
     edge_path_lines = get_edge_path_lines(edge_path)
