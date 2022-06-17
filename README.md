@@ -34,6 +34,8 @@ python 2.7(jupyter notebook,sublime text4)
 
 #Anmerkungen Luis
 ***
+t_drive setzt das map-matching des IVMM-Algorithmus um.
+***
 Falls es Probleme mit dem osmnx-package gibt, muss ein neues environment aufgesetzt werden.
 ***
 In der Klasse Test, sowie Test_Beijing können die Algorithmen auf die road_networks und deren zugehörige GPS-Logs angewendet werden. Bisher wurde nur IVMM getestet.
