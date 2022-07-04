@@ -5,6 +5,9 @@ Script to test the map-matching algorithm on road-networks and their associated 
 
 
 import os
+
+import pandas as pd
+
 from RoadNetwork import load_road_network_graphml, load_road_network_seattle, load_road_network_melbourne
 from Trip import load_gps_data_seattle, load_gps_data_porto, load_gps_data_melbourne
 from Rtree import find_candidates, build_rtree_index_edges
@@ -18,8 +21,9 @@ from OBRHMM import obr_mapper_v1
 
 
 
-def get_optimal_path_edges(candidates, weights, optimal_path, debug=False):
+def get_optimal_path_edges(candidates, candidates_time, weights, optimal_path, debug=False):
     edge_list = []
+    edge_id_list_time = []
     for i in range(len(candidates)-1):
         to_id = optimal_path[i+1]
         from_id = optimal_path[i]
@@ -32,6 +36,7 @@ def get_optimal_path_edges(candidates, weights, optimal_path, debug=False):
             print(i)
         for j in range(len(sub_edge_list)-1):
             edge_list.append(sub_edge_list[j])
+            edge_id_list_time.append(candidates_time[i])  # zu jeder Kante wird die zugehörige Zeit aus dem GPS-Log gespeichert
             if debug:
                 print(sub_edge_list[j]['from'], sub_edge_list[j]['to'])
         if i == len(candidates)-1:
@@ -41,14 +46,17 @@ def get_optimal_path_edges(candidates, weights, optimal_path, debug=False):
     edge_id_list = []
     for edge in edge_list:
         edge_id_list.append(edge.name)
-    return edge_list, edge_id_list
+    return edge_list, edge_id_list, edge_id_list_time
 
 
 def save_to_file_matching_result(filename, opt_route):
     with open(filename, 'w') as fWriter:
         fWriter.write('%d\n' % len(opt_route))
+        ''' ursprünglich nur edge_id_list ohne time reingeschrieben
         for i in range(len(opt_route)):
             fWriter.write('%d\n' % opt_route[i])
+        '''
+        fWriter.write(opt_route.to_string(header=False, index=False)) #dataframe direkt in txt-file schreiben
 
 
 def map_osm_edge_id(edges_gpd, opt_route):
@@ -96,7 +104,7 @@ def map_matching_test(data_name, algo_name):
        
     elif data_name is 'Melbourne':
         road_file = '/Users/luismasuchibanez/PycharmProjects/t_drive/map_matching/MapMatchingPython/MapMatchingPython/data/Melbourne/complete-osm-map/streets.txt'
-        trip_file = '/Users/luismasuchibanez/PycharmProjects/t_drive/map_matching/MapMatchingPython/MapMatchingPython/data/Melbourne/GPS_Logs/UTS_format/gps_track_test.txt'
+        trip_file = '/Users/luismasuchibanez/PycharmProjects/t_drive/map_matching/MapMatchingPython/MapMatchingPython/data/Melbourne/GPS_Logs/UTS_format/gps_track.txt'
         #trip_file = '/Users/luismasuchibanez/PycharmProjects/t_drive/map_matching/MapMatchingPython/MapMatchingPython/data/Melbourne/GPS_Logs/standard_format/gps_track.txt'
         road_graph_utm, gpd_edges_utm = load_road_network_melbourne(road_file, crs, to_crs)
         trip = load_gps_data_melbourne(trip_file, crs, to_crs)
@@ -121,7 +129,7 @@ def map_matching_test(data_name, algo_name):
 
     if algo_name in ['HMM', 'ST', 'IVMM', 'Ant', 'SIMP']:
         # print('The edge r-tree index prepared!')
-        candidates = find_candidates(trip, edge_idx, k)
+        candidates, candidates_time = find_candidates(trip, edge_idx, k)
         # print('Candidates prepared!')
 
     if algo_name is 'Ant':
@@ -158,18 +166,18 @@ def map_matching_test(data_name, algo_name):
 
     # print optimal_path
     if algo_name in ['HMM', 'ST', 'IVMM', 'Ant', 'SIMP']:
-        edge_list, edge_id_list = get_optimal_path_edges(candidates, weights, optimal_path)
-
+        edge_list, edge_id_list, edge_id_list_time = get_optimal_path_edges(candidates, candidates_time, weights, optimal_path)
     # seq = [data_name, sample_rate,algo_name, 'matching_result.txt']
     seq = [data_name,algo_name, 'matching_result.txt']
     Path="/Users/luismasuchibanez/PycharmProjects/t_drive/map_matching//MapMatchingPython/MapMatchingPython/mapmatching/output"
     connect_str = '_'
     filename = os.path.join(Path,connect_str.join(seq))
+    edge_id_list_extended = pd.DataFrame((zip(edge_id_list, edge_id_list_time)), columns = ['ID', 'Time']) #Listen zusammengelegt, edge_id_list durch Zeit ergänzt
     if data_name is 'Seattle':
         opt_route_osm_edge_id = map_osm_edge_id(gpd_edges_utm, edge_id_list)
         save_to_file_matching_result_seattle(filename, opt_route_osm_edge_id)
     else:
-        save_to_file_matching_result(filename, edge_id_list)
+        save_to_file_matching_result(filename, edge_id_list_extended)
 
 
 # data name includes:

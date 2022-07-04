@@ -3,6 +3,7 @@ import rtree
 from shapely.geometry import Point, LineString
 from shapely.ops import nearest_points
 import pandas as pd
+from datetime import datetime
 
 
 def build_rtree_index_edges(gpd_edges):
@@ -77,10 +78,15 @@ def find_candidates(trip, edge_idx, k):
     :return: a list, each element is a list of corresponding candidates
     """
     candi_list = []
+    candi_time_list = []
     for i in range(len(trip)):
         candidates = query_k_nearest_road_segments(edge_idx, trip.iloc[i]['geometry'], k)
         candi_list.append(candidates)
-    return candi_list
+        # zu jeder Liste an candidates wird Zeitpunkt des GPS-Punkt in cadi-time-list geschrieben
+        ts = int(trip.iloc[i][0])
+        time = datetime.utcfromtimestamp(ts).strftime('%d-%b-%Y %H:%M:%S')
+        candi_time_list.append(time)
+    return candi_list, candi_time_list
 
 
 #K = 6
