@@ -1,5 +1,5 @@
 """
-Script to convert the BeijingGPSLogFormat to the SeattleGPSLogFormat
+Script to convert the BeijingGPSLogFormat to the UTSGPSLogFormat or StandardGPSLogFormat
 by deleting the first column and changing the datetime-format.
 
 @author: Luis Masuch Ibanez (luismasuchibanez@googlemail.com)
@@ -57,7 +57,7 @@ def convert_to_uts_format(input_dir, output_dir):
                 df['UTS'] = df['Data(UTC)'] + " " + df['Time(UTC)']
                 df.drop(columns=['Data(UTC)'], inplace=True)
                 df.drop(columns=['Time(UTC)'], inplace=True)
-                df = df[['UTS', 'Latitude', 'Longitude']]
+                df = df[['UTS', 'Longitude', 'Latitude']]
                 for row_index, row in df.iterrows():
                     ts = row[0]
                     df.loc[row_index, 'UTS'] = int(pd.Timestamp(ts).timestamp())

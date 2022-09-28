@@ -1,2 +1,0 @@
-UTS Latitude Longitude
-1202173350 0.0 0.0

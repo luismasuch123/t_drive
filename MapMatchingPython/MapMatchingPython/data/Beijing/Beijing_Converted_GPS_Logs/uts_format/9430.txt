@@ -1,2 +1,0 @@
-UTS Latitude Longitude
-1202186434 116.36957 39.90933

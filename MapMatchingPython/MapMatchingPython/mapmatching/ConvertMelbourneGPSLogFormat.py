@@ -1,5 +1,5 @@
 """
-Script to convert the Melbourne-GPSLogFormat to the Seattle-GPSLogFormat(standard)
+Script to convert the Melbourne-GPSLogFormat to the StandardGPSLogFormat
 or just converting the utc-time to local-time.
 
 @author: Luis Masuch Ibanez (luismasuchibanez@googlemail.com)

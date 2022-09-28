@@ -29,6 +29,7 @@ def normal_distribution(mu, sigma, x):
 
 def calculate_observation_probability(candidates, mu, sigma):
     for i in range(len(candidates)):
+        print("candidates distance: " + str(candidates[i]['distance']))
         candidates[i]['observation prob'] = \
             candidates[i].apply(lambda row:
                                 normal_distribution(mu, sigma, row['distance']), axis=1)

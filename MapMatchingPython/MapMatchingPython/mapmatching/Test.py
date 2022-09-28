@@ -88,37 +88,45 @@ def map_matching_test(data_name, algo_name):
     """
     print('Set data name as %s' % data_name)
     print('Set algorithm name as %s' % algo_name)
-    crs = {'init': 'epsg:4326'}
-    to_crs = {'init': 'epsg:3395'}
+    crs = 'EPSG:4326'
+    to_crs = 'EPSG:3395' #projection to WGS84/World MErcator (World - between 80S. and 84N.)
     optimal_path = []
     candidates = []
     weights = []
     k = 3  # number of candidate points for each gps point
     if data_name is 'Seattle':
-
-        road_file = '/Users/luismasuchibanez/PycharmProjects/t_drive/map_matching/MapMatchingPython/MapMatchingPython/data/Seattle/road_network.txt'
-        trip_file = '/Users/luismasuchibanez/PycharmProjects/t_drive/map_matching/MapMatchingPython/MapMatchingPython/data/Seattle/gps_data.txt'
-        road_graph_utm, gpd_edges_utm = load_road_network_seattle(road_file, crs, to_crs)
-        trip = load_gps_data_seattle(trip_file, crs, to_crs)
+        #aktuell road_file und road_graph_utm, usw. auf Melbourne-Format angepasst
+        #road_file = '/Users/luismasuchibanez/PycharmProjects/t_drive/map_matching/MapMatchingPython/MapMatchingPython/data/Seattle/road_network.txt'
+        road_file = '/Users/luismasuchibanez/PycharmProjects/t_drive/map_matching/MapMatchingPython/MapMatchingPython/data/Seattle/complete_osm_map_osm_test/streets.txt'
+        trip_file = '/Users/luismasuchibanez/PycharmProjects/t_drive/map_matching/MapMatchingPython/MapMatchingPython/data/Seattle/Seattle_Converted_GPS_Logs/uts_format/gps_track.txt'
+        #road_graph_utm, gpd_edges_utm = load_road_network_seattle(road_file, crs, to_crs)
+        road_graph_utm, gpd_edges_utm = load_road_network_melbourne(road_file, crs, to_crs)
+        #trip = load_gps_data_seattle(trip_file, crs, to_crs)
+        trip = load_gps_data_melbourne(trip_file, crs, to_crs)
 
        
     elif data_name is 'Melbourne':
         road_file = '/Users/luismasuchibanez/PycharmProjects/t_drive/map_matching/MapMatchingPython/MapMatchingPython/data/Melbourne/complete-osm-map/streets.txt'
-        trip_file = '/Users/luismasuchibanez/PycharmProjects/t_drive/map_matching/MapMatchingPython/MapMatchingPython/data/Melbourne/GPS_Logs/UTS_format/gps_track.txt'
+        trip_file = '/Users/luismasuchibanez/PycharmProjects/t_drive/map_matching/MapMatchingPython/MapMatchingPython/data/Melbourne/GPS_Logs/UTS_format/gps_track_test.txt'
         #trip_file = '/Users/luismasuchibanez/PycharmProjects/t_drive/map_matching/MapMatchingPython/MapMatchingPython/data/Melbourne/GPS_Logs/standard_format/gps_track.txt'
         road_graph_utm, gpd_edges_utm = load_road_network_melbourne(road_file, crs, to_crs)
         trip = load_gps_data_melbourne(trip_file, crs, to_crs)
-        #print(trip["geometry"])
+        print(trip['geometry'])
   
 
     elif data_name is 'Porto':
-        road_file = 'porto.graphml'
-        road_folder = '/Users/luismasuchibanez/PycharmProjects/t_drive/map_matching/MapMatchingPython/MapMatchingPython/data/Porto'
-        trip_folder = '/Users/luismasuchibanez/PycharmProjects/t_drive/map_matching/MapMatchingPython/MapMatchingPython/data/Porto/trips'
-        trip_file = 'trip_1.txt'
-        road_graph_utm, gpd_edges_utm, wgs_crs, utm_crs = load_road_network_graphml(road_folder, road_file)
-        trip = load_gps_data_porto(trip_folder+'/'+trip_file, wgs_crs, utm_crs)
-        sample_rate=trip.iloc[1]["timestamp"]-trip.iloc[0]["timestamp"]
+        # aktuell road_file und road_graph_utm, usw. auf Melbourne-Format angepasst
+        #road_file = 'porto.graphml'
+        #road_folder = '/Users/luismasuchibanez/PycharmProjects/t_drive/map_matching/MapMatchingPython/MapMatchingPython/data/Porto'
+        road_file = '/Users/luismasuchibanez/PycharmProjects/t_drive/map_matching/MapMatchingPython/MapMatchingPython/data/Porto/map-porto/streets.txt'
+        #trip_folder = '/Users/luismasuchibanez/PycharmProjects/t_drive/map_matching/MapMatchingPython/MapMatchingPython/data/Porto/trips'
+        #trip_file = 'trip_1.txt'
+        trip_file = '/Users/luismasuchibanez/PycharmProjects/t_drive/map_matching/MapMatchingPython/MapMatchingPython/data/Porto/GPS_Logs_converted/uts_format/0.txt'
+        #road_graph_utm, gpd_edges_utm, wgs_crs, utm_crs = load_road_network_graphml(road_folder, road_file)
+        #trip = load_gps_data_porto(trip_folder+'/'+trip_file, wgs_crs, utm_crs)
+        #sample_rate=trip.iloc[1]["timestamp"]-trip.iloc[0]["timestamp"]
+        road_graph_utm, gpd_edges_utm = load_road_network_melbourne(road_file, crs, to_crs)
+        trip = load_gps_data_melbourne(trip_file, crs, to_crs)
 
     else:
         print('Unknown data name!\n')
@@ -168,16 +176,17 @@ def map_matching_test(data_name, algo_name):
     if algo_name in ['HMM', 'ST', 'IVMM', 'Ant', 'SIMP']:
         edge_list, edge_id_list, edge_id_list_time = get_optimal_path_edges(candidates, candidates_time, weights, optimal_path)
     # seq = [data_name, sample_rate,algo_name, 'matching_result.txt']
-    seq = [data_name,algo_name, 'matching_result.txt']
+    seq = [data_name, algo_name, 'matching_result.txt']
     Path="/Users/luismasuchibanez/PycharmProjects/t_drive/map_matching//MapMatchingPython/MapMatchingPython/mapmatching/output"
     connect_str = '_'
     filename = os.path.join(Path,connect_str.join(seq))
     edge_id_list_extended = pd.DataFrame((zip(edge_id_list, edge_id_list_time)), columns = ['ID', 'Time']) #Listen zusammengelegt, edge_id_list durch Zeit ergänzt
-    if data_name is 'Seattle':
+    if data_name is 'Seattlee': #TODO: was bewirkt erster der beiden Schritte in if entgegen dem einzelnen Schritt in else?
         opt_route_osm_edge_id = map_osm_edge_id(gpd_edges_utm, edge_id_list)
         save_to_file_matching_result_seattle(filename, opt_route_osm_edge_id)
     else:
         save_to_file_matching_result(filename, edge_id_list_extended)
+        print("edge_id_list_extended: " + str(edge_id_list_extended))
 
 
 # data name includes:
@@ -191,7 +200,7 @@ def map_matching_test(data_name, algo_name):
 # map_matching_test('Melbourne', 'OBRHMM')
 # map_matching_test('Melbourne', 'SIMP')
 #map_matching_test('Melbourne', 'Ant')
-map_matching_test('Melbourne', 'IVMM')
+map_matching_test('Porto', 'IVMM')
 
 # map_matching_test('Porto', 'Ant')
 # map_matching_test('Porto', 'IVMM')

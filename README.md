@@ -41,23 +41,25 @@ Falls es Probleme mit dem osmnx-package gibt, muss ein neues environment aufgese
 In der Klasse Test, sowie Test_Beijing können die Algorithmen auf die road_networks und deren zugehörige GPS-Logs angewendet werden. Bisher wurde nur IVMM getestet.
 Unter road_file wird jeweils streets.txt der entsprechenden Stadt hinterlegt. Diese txt_Datei erhält man, indem man eine osm-Karte mit dem osm-parser umwandelt. 
 Unter trip_file das GPS-Log bzw. der Ordner mit den GPS-Logs, die gematched werden sollen.
-Aktuell wird immer nur ein Log gematched. Später sollen dann mehrere Logs hintereinander gematched werden.
+In Test wird immer nur ein Log gematched. In Test_multiple_logs_IVMM können mehrere Logs hintereinander gematched werden.
 ***
-Aktuell läuft das map-matching nur für Melbourne und das uts_format. Außerdem terminiert der Algorithmus nur für verkürzte GPS-Logs (z.B. gps_track_test.txt). 
-Die Umwandlung in das standard_format verschafft keine Abhilfe. Mithilfe von ConvertBeijingGPSLogFormat.py können GPS-Logs aus Beijing (taxi_log_2008_by_id) in das uts_format oder das standard_format umgewandelt werden. 
+Die Logs können verschiedene Formate besitzen. Im Standard-Format besteht jede Zeile eines Logs aus 4 Spalten. Dem Datum, der Uhrzeit, dem Breitengrad und dem Längengrad.
+Beim UTS-Format werden die ersten beiden Spalten zu einer Zahlenfolge zusammengefasst. Aktuell funktioniert der Algorithmus nur in Kombination mit dem UTS-Format und für die auf Melbourne zugeschnittenen Methoden, 
+weshalb für alle Städte beim Laden des Straßennetzwerks, sowie der GPS-Logs jeweils die für Melbourne vorgesehenen Methoden genutzt werden. Mithilfe von ConvertBeijingGPSLogFormat.py können GPS-Logs aus 
+Beijing (taxi_log_2008_by_id) in das uts_format oder das standard_format umgewandelt werden. 
 Das uts_format ist das ursprüngliche Format der GPS-Logs für Melbourne, während das standard_format das Format ist, in dem die Daten für Seattle und Porto gegeben waren. 
-Mithilfe von ConvertMelbourneGPSLogFormat.py können die GPS-Logs aus Melbourne in das standard_format übertragen werden.
+Mithilfe von ConvertMelbourneGPSLogFormat.py können die GPS-Logs aus Melbourne in das standard_format übertragen werden. Für die restlichen Städte existieren äquivalente Klassen, die zusammengefasst werden könnten.
+Es könnte versucht werden den Algorithmus für die anderen Formate zum Laufen zu bringen und so die vorgesehenen Methoden für die jeweiligen Städte zu nutzen. (Worin genau der Unterschied in den Methoden besteht oder 
+ob der Unterschied nur in der Verarbeitung der unterschiedlichen Log-Formate besteht, habe ich nicht näher untersucht) Die Methoden müssten dann gegebenenfalls angepasst werden. Es müsste zum Beispiel berücksichtigt 
+werden, dass die Zeitpunkte mit in die edge_id_list (Liste mit besuchten Kanten nach map-matching) geschrieben werden, was vorher nicht der Fall war.
 ***
-gps_track.to_crs(to_crs) liefert Error für Beijing und Seattle. Dies könnte der Grund für den NodeNotReachable-Error sein.
-Wenn beispielsweise für Beijing versucht wird, die Logs im uts_format zu laden und gps_track.to_crs(to_crs) in load_gps_data_beijing() nicht auskommentiert ist, erhält man den ValueError "The second input geometry is empty".
-Debugging nicht möglich. ("AttributeError: module 'posixpath' has no attribute 'sep'")
-NodeNotReachable reproduzierbar mit Beijing, standard_format und load_gps_data_beijing() in Test_Beijing_IVMM.py.
-Auch für Melbourne erhält man NodeNotReachable, wenn in load_gps_data_melbourne gps_track.to_crs(crs) statt gps_track.to_crs(to_crs) aufgerufen wird.
+In gps_track.to_crs(to_crs) wird eine Projektion von dem Format Längengra - Breitengrad auf ein anderes Koordinatensystem durchgeführt ('EPSG:3395' #projection to WGS84/World MErcator (World - between 80S. and 84N.)), damit Distanzen zwischen zwei Punkten unverzehrt sind. 
+Falls Fehler auftreten sollte überprüft werden, ob die Längen- und Breitengrade in den GPS-Logs vertauscht sind.
 In https://geopandas.org/en/stable/docs/user_guide/projections.html werden die Projections erklärt.
 ***
 Die Anzahl der Kandidaten, die für jeden GPS-Punkt in Erwägung gezogen werden, kann in map_matching_test() gesetzt werden.
 ***
-Unklar, worin Fehler genau liegt. Selbst wenn für Melbourne manuell GPS-Daten erfasst werden, erhält man NodeNotReachable.
+Überpüfen, ob der Algorithmus für manuell erfasste GPS-Punkte funktioniert.
 
 
 

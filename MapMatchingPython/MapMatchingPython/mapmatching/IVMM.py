@@ -147,10 +147,14 @@ def ivmm_mapper(road_graph_utm, gpd_edges_utm, trip, candidates, debug=False):
     mu = 0  # mean, parameter for calculating observation probability
     sigma = 10  # standard deviation, parameter for calculating observation probability
     # calculate observation probability
+    print("calculate observation probability")
+    #TODO: für Beijing sind die probabilities alle 0, woran liegt es? -> wahrscheinlich, weil die distances sehr groß sind (wofür stehen sie?)
     calculate_observation_probability(candidates, mu, sigma)
     # calculate weights
     weights = calculate_weights(road_graph_utm, gpd_edges_utm, trip, candidates)
+    print("weights: " + str(weights))
     static_score = calculate_static_score_matrix(weights)
+    print("static score: " + str(static_score))
     # save_to_file_static_score('debug_ivmm_static_score.txt', static_score)
     # finding the optimal path
     beta = 7000
