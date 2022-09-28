@@ -32,7 +32,7 @@ python 2.7(jupyter notebook,sublime text4)
 6.Rtree  
 7.matplotlib  
 
-#Anmerkungen Luis
+#Anmerkungen/Anpassungen Luis
 ***
 t_drive setzt das map-matching des IVMM-Algorithmus um.
 ***
