@@ -60,6 +60,8 @@ In https://geopandas.org/en/stable/docs/user_guide/projections.html werden die P
 Die Anzahl der Kandidaten, die für jeden GPS-Punkt in Erwägung gezogen werden, kann in map_matching_test() gesetzt werden.
 ***
 Überpüfen, ob der Algorithmus für manuell erfasste GPS-Punkte funktioniert.
+***
+Um die Ergebnisse des routing zu verbessern bzw. repräsentativer zu machen, sollten alle GPS-Logs von Beijing gematched werden.
 
 
 

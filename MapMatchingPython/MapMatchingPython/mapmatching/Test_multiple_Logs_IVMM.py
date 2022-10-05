@@ -84,7 +84,7 @@ def map_matching_test(data_name, algo_name):
     candidates = []
     weights = []
     k = 3  # number of candidate points for each gps point
-    for i in range(3, 10358): #number of GPS-Logs that are used for the map-matching #TODO: könnte angepasst werden, sodass alle Logs aus einem Ordner gematched werden
+    for i in range(58, 10358): #number of GPS-Logs that are used for the map-matching #TODO: könnte angepasst werden, sodass alle Logs aus einem Ordner gematched werden
         log_number = i
 
         if data_name is 'Beijing':
